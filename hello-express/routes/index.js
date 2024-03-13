@@ -3,7 +3,15 @@ var router = express.Router();
 
 /* GET home page. */
 router.get('/', function(req, res, next) {
+  next('router');
+});
+
+router.get('/', function(req, res, next) {
   res.render('index', { title: 'Express' });
+});
+
+router.post('/', function(req, res, next) {
+  console.log('포스트 요청입니다-!');
 });
 
 module.exports = router;
