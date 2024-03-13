@@ -1,17 +1,16 @@
 var express = require('express');
 var router = express.Router();
+var User = require('../models').User;
 
 /* GET home page. */
-router.get('/', function(req, res, next) {
-  next('router');
-});
-
-router.get('/', function(req, res, next) {
-  res.render('index', { title: 'Express' });
-});
-
-router.post('/', function(req, res, next) {
-  console.log('포스트 요청입니다-!');
+router.get('/', async (req, res, next) => {
+  try {
+    const users = await User.findAll();  
+    res.render('sequelize', {users});
+  } catch (error) {
+    console.error(error);
+    next(error);    
+  }
 });
 
 module.exports = router;
