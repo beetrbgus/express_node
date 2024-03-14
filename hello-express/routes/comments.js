@@ -1,16 +1,13 @@
 var express = require('express');
-var {User, Comment} = require('../models');
+var Comment = require('../schemas/comment');
 
 var router = express.Router();
 
 router.get('/:id', async (req, res, next) => {
   try {
-    let comments = await Comment.findAll({
-      include : {
-        model : User,
-        where : { id: req.params.id },
-      },
-    });
+    let comments = await Comment.find({
+      commenter : req.params.id      
+    }).populate('commenter');
     res.json(comments);
 
   } catch(error) {
@@ -21,11 +18,12 @@ router.get('/:id', async (req, res, next) => {
 
 router.post('/', async (req, res, next) => {
   try {
-    let comment = await Comment.create({
+    let comment = new Comment({
       commenter : req.body.id,
       comment : req.body.comment,
     });
-    res.status(201).json(comment);
+    const result = Comment.populate(await comment.save(), {path : 'commenter'});
+    res.status(201).json(result);
 
   } catch (error) {
     console.error(error);
@@ -35,14 +33,7 @@ router.post('/', async (req, res, next) => {
 
 router.patch('/:id', async (req, res, next) => {
   try {
-    let comment = await Comment.update(
-      {
-        comment : req.body.comment,
-      }, 
-      {
-        where : { id : req.params.id}  
-      }
-    );
+    let comment = await Comment.update({ _id : req.body.id }, { comment : req.body.comment});
     res.status(201).json(comment);
 
   } catch (error) {
@@ -53,8 +44,8 @@ router.patch('/:id', async (req, res, next) => {
 
 router.delete('/:id', async (req, res, next) => {
   try {
-    let comment = await Comment.destroy({
-      where : { id : req.params.id}
+    let comment = await Comment.remove({
+       _id : req.params.id
     });
 
     res.json(comment);

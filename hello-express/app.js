@@ -6,11 +6,12 @@ var logger = require('morgan');
 
 var indexRouter = require('./routes/index');
 var usersRouter = require('./routes/users');
-var commentRouter = require('./routes/comments') // 댓글 router 추가
-var sequelize = require('./models').sequelize; // ./models는 ./models/index.js와 동일. index.js파일은 require시 생략 가능
+var commentRouter = require('./routes/comments'); // 댓글 router 추가
+
+var connect = require('./schemas');
 
 var app = express();
-sequelize.sync();
+connect();
 
 // view engine setup
 app.set('views', path.join(__dirname, 'views'));
