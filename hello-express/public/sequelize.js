@@ -112,44 +112,57 @@ document.querySelectorAll('#user-list tr').forEach((el) => {
     xhr.send();
   }
   // 사용자 등록 시
-  document.getElementById('user-form').addEventListener('submit', async (e) => {
-    e.preventDefault();
-    const name = e.target.username.value;
-    const age = e.target.age.value;
-    const married = e.target.married.checked;
-    if (!name) {
-      return alert('이름을 입력하세요');
-    }
-    if (!age) {
-      return alert('나이를 입력하세요');
-    }
-    try {
-      await axios.post('/users', { name, age, married });
+  // 사용자 등록 시
+document.getElementById('user-form').addEventListener('submit', function (e) {
+  e.preventDefault();
+  var name = e.target.username.value;
+  var age = e.target.age.value;
+  var married = e.target.married.checked;
+  if (!name) {
+    return alert('이름을 입력하세요');
+  }
+  if (!age) {
+    return alert('나이를 입력하세요');
+  }
+  var xhr = new XMLHttpRequest();
+  xhr.onload = function () {
+    if (xhr.status === 201) {
+      console.log(xhr.responseText);
       getUser();
-    } catch (err) {
-      console.error(err);
+    } else {
+      console.error(xhr.responseText);
     }
-    e.target.username.value = '';
-    e.target.age.value = '';
-    e.target.married.checked = false;
-  });
-  // 댓글 등록 시
-  document.getElementById('comment-form').addEventListener('submit', async (e) => {
-    e.preventDefault();
-    const id = e.target.userid.value;
-    const comment = e.target.comment.value;
-    if (!id) {
-      return alert('아이디를 입력하세요');
-    }
-    if (!comment) {
-      return alert('댓글을 입력하세요');
-    }
-    try {
-      await axios.post('/comments', { id, comment });
+  };
+  xhr.open('POST', '/users');
+  xhr.setRequestHeader('Content-Type', 'application/json');
+  xhr.send(JSON.stringify({ name: name, age: age, married: married }));
+  e.target.username.value = '';
+  e.target.age.value = '';
+  e.target.married.checked = false;
+});
+// 댓글 등록 시
+document.getElementById('comment-form').addEventListener('submit', function (e) {
+  e.preventDefault();
+  var id = e.target.userid.value;
+  var comment = e.target.comment.value;
+  if (!id) {
+    return alert('아이디를 입력하세요');
+  }
+  if (!comment) {
+    return alert('댓글을 입력하세요');
+  }
+  var xhr = new XMLHttpRequest();
+  xhr.onload = function () {
+    if (xhr.status === 201) {
+      console.log(xhr.responseText);
       getComment(id);
-    } catch (err) {
-      console.error(err);
+    } else {
+      console.error(xhr.responseText);
     }
-    e.target.userid.value = '';
-    e.target.comment.value = '';
-  });
+  };
+  xhr.open('POST', '/comments');
+  xhr.setRequestHeader('Content-Type', 'application/json');
+  xhr.send(JSON.stringify({ id: id, comment: comment }));
+  e.target.userid.value = '';
+  e.target.comment.value = '';
+});
