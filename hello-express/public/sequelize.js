@@ -111,7 +111,7 @@ document.querySelectorAll('#user-list tr').forEach((el) => {
     xhr.open('GET', '/comments/' + id);
     xhr.send();
   }
-  // 사용자 등록 시
+
   // 사용자 등록 시
 document.getElementById('user-form').addEventListener('submit', function (e) {
   e.preventDefault();
