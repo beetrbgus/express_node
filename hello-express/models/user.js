@@ -1,5 +1,5 @@
 module.exports = (sequelize, DataTypes) => {
-    return sequelize.define('users', {
+    return sequelize.define('user', {
         // id 컬럼은 기본키로 연결해 적을 필요가 없음.
         name : {
             type : DataTypes.STRING(20),
